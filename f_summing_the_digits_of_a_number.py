@@ -23,4 +23,4 @@ for i in n:
     new_nums.append(count_nums(i))
     
 nums_correct = ', '.join(map(str, new_nums))
-print(new_nums, sum(new_nums))
+print(f'the sum of your digits: {nums_correct}\nthe sum of the digits of the new sequence: {sum(new_nums)}')
