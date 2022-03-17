@@ -21,4 +21,6 @@ n = map(int, input('Enter a few numbers separated by a space ').split())
 new_nums = []
 for i in n:
     new_nums.append(count_nums(i))
+    
+nums_correct = ', '.join(map(str, new_nums))
 print(new_nums, sum(new_nums))
