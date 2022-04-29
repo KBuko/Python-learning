@@ -11,25 +11,44 @@ import math
 
 
 class Figure:
-    def __init__(self, x1, y1, x2, y2, x3, y3, x4, y4):
-        if x1 == x2 == x3 == x4 or y1 == y2 == y3 == y4:
-            print('this object does not exist')
-            self.__del__()
+    def __init__(self, num_of_points):
+        i = 0
+        dots = []
+        while i < num_of_points:
+            dot = []
+            x = int(input(f'enter X value for the {i + 1} point '))
+            y = int(input(f'enter Y value for the {i + 1} point '))
+            dot.append(x)
+            dot.append(y)
+            dots.append(dot)
+            i += 1
+        self.dots = dots
 
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
-        self.x3 = x3
-        self.y3 = y3
-        self.x4 = x4
-        self.y4 = y4
-
-        print('!the new object was created\n')
+        self.x1 = self.dots[0][0]
+        self.y1 = self.dots[0][1]
+        self.x2 = self.dots[1][0]
+        self.y2 = self.dots[1][1]
+        self.x3 = self.dots[2][0]
+        self.y3 = self.dots[2][1]
+        self.x4 = self.dots[3][0]
+        self.y4 = self.dots[3][1]
+        print('the new object was created!\n')
 
     def __del__(self):
         print('the object was deleted')
-        print('-' * 50)
+
+    def check_figure(self, to_print=True):
+        try:
+            k0 = (self.y2 - self.y1) / (self.x2 - self.x1)
+            k1 = (self.y3 - self.y4) / (self.x3 - self.x4)
+            k2 = (self.y3 - self.y2) / (self.x3 - self.x2)
+            k3 = (self.y4 - self.y1) / (self.x4 - self.x1)
+        except ZeroDivisionError:
+            k0, k1, k2, k3 = 0, 0, 0, 0
+        if k0 == k1 == k2 == k3 and to_print:
+            print('this is not a figure, it is a line')
+            return False
+        return k0, k1, k2, k3
 
     def side(self, a1, b1, a2, b2):
         return round(math.sqrt(math.pow((a2 - a1), 2) + math.pow((b2 - b1), 2)))
@@ -44,7 +63,7 @@ class Figure:
                 f'the sides of this object are: 1st - {side1}, 2nd - {side2}, 3rd - {side3}, 4th - {side4}')
         return side1, side2, side3, side4
 
-    def check_figure(self):
+    def check_figure_sides(self):
         sides = self.get_sides(to_print=False)
         if (sides[0] < sides[1] + sides[2] + sides[3]) \
                 and (sides[1] < sides[0] + sides[2] + sides[3]) \
@@ -82,55 +101,45 @@ class Figure:
                  (perimetr / 2 - sides[3]))
         part2 = sides[0] * sides[1] * sides[2] * sides[3]
         part3 = ((math.cos((math.degrees(angle1) + math.degrees(angle2)) / 2)) ** 2)
-        square = round(math.sqrt(part1 - part2 * part3), 2)
-        if square > 0:
+        if part1 - part2 * part3 > 0:
+            square = round(math.sqrt(part1 - part2 * part3), 2)
             print(f'the square of the figure is - {square:.2f}')
             return square
         else:
             print('such a quadrilateral is distorted. it is not convex')
+            return False
 
 
-class parallelogram(Figure):
+class Parallelogram(Figure):
 
     def check_parallels(self):
-        if self.x1 == self.x2 and self.x3 == self.x4:
-            print('this is parallelogram')
+        sides = self.get_sides(to_print=False)
+        if sides[0] == sides[2] and sides[1] == sides[3]:
+            k0, k1, k2, k3 = self.check_figure(to_print=False)
+            if k0 == k1 and k2 == k3:
+                print('this is a parallelogram')
         else:
             print('this is not a parallelogram')
-            self.__del__()
 
     def get_parallels(self):
         return f'has points: {self.x1}, {self.y1}, {self.x2}, {self.y2}, ' \
                f'{self.x3}, {self.y3}, {self.x4}, {self.y4}'
 
 
-newObject = [Figure(0, 20, 4, 18, 0, 20, 0, 4), Figure(12, 0, 4, 18, 2, 20, 0, 4)]
-
-newObject2 = [parallelogram(12, 3, 12, 18, 2, 20, 2, 4), parallelogram(5, 8, 12, 0, 3, 5, 3, 9),
-              parallelogram(0, 0, 12, 3, 9, 30, 100, 53)]
-
-if newObject[0].check_figure() and (not newObject[0].calculate_square()):
-    newObject[0].__del__()
+#creating an object to test methods of the "Figure" class
+obj = Figure(4)
+if (not obj.check_figure()) or (not obj.check_figure_sides) or (not obj.calculate_square()):
+    pass
 else:
-    newObject[0].get_sides()
-    newObject[0].calculate_perimeter()
-    print('-' * 50)
+    obj.get_sides()
+    obj.calculate_perimeter()
+print('-' * 50)
 
-if newObject[1].check_figure() and (not newObject[1].calculate_square()):
-    newObject[1].__del__()
+#creating an object to test methods of the "Parallelogram" class
+obj2 = Parallelogram(4)
+if (not obj2.check_figure()) or (not obj2.check_figure_sides) or (not obj2.calculate_square()):
+    pass
 else:
-    newObject[1].get_sides()
-    newObject[1].calculate_perimeter()
-    print('-' * 50)
-
-if newObject2[0].check_figure() and (not newObject2[0].calculate_square()):
-    newObject2[0].__del__()
-else:
-    newObject2[0].check_parallels()
-    newObject2[0].calculate_perimeter()
-    print('-' * 50)
-
-# max_square = max(newObject2, key=lambda sq: sq.calculate_square())
-
-# print('*'*50)
-# print(f'The parallelogram with max square {max_square.get_parallels()}.')
+    obj2.check_parallels()
+    obj2.get_sides()
+    obj2.calculate_perimeter()
