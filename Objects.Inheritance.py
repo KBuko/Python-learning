@@ -9,6 +9,9 @@ Below is a commented out program that analyzes quadrilaterals to find the maximu
 '''
 import math
 
+agree = {'yes', 'yep', 'y', 'ye'}
+disagree = {'no', 'nope', 'n'}
+
 
 def create_figure():
     dots = []
@@ -19,13 +22,13 @@ def create_figure():
         dot.append(x)
         dot.append(y)
         dots.append(dot)
-    question = input('would you like to check an object for the properties of a parallelogram? (yes/no) ').lower()
-    if question in {'yes', 'yep', 'y', 'ye'}:
+    answer = input('would you like to check an object for the properties of a parallelogram? (yes/no) ')
+    if answer in agree:
         return Parallelogram(dots)
-    elif question in {'no', 'nope', 'n'}:
+    elif answer in disagree:
         return Quadrilateral(dots)
     else:
-        print('Wrong answer. Please, try again')
+        print('wrong answer. Try again')
         return create_figure()
 
 
@@ -43,7 +46,7 @@ class Quadrilateral:
         print('the new object was created!\n')
 
     def __del__(self):
-        print('the object was deleted')
+        pass
 
     def check_figure(self, to_print=True):
         try:
@@ -109,9 +112,8 @@ class Quadrilateral:
                  (perimetr / 2 - sides[3]))
         part2 = sides[0] * sides[1] * sides[2] * sides[3]
         part3 = ((math.cos((math.degrees(angle1) + math.degrees(angle2)) / 2)) ** 2)
-        parts = part1 - part2 * part3
-        if parts > 0:
-            square = round(math.sqrt(parts), 2)
+        if part1 - part2 * part3 > 0:
+            square = round(math.sqrt(part1 - part2 * part3), 2)
             print(f'the square of the figure is - {square:.2f}')
             return square
         else:
@@ -131,10 +133,17 @@ class Parallelogram(Quadrilateral):
             print('this is not a parallelogram')
 
 
-#creating an object to test methods of the "Figure" class
-MyObject = create_figure()
-if MyObject.check_figure() and MyObject.check_figure_sides() and MyObject.calculate_square():
-    MyObject.get_sides()
-    MyObject.calculate_perimeter()
-    if isinstance(MyObject, Parallelogram):
-        MyObject.check_parallels()
+while True:
+    MyObject = create_figure()
+    if MyObject.check_figure() and MyObject.check_figure_sides() and MyObject.calculate_square():
+        MyObject.get_sides()
+        MyObject.calculate_perimeter()
+        if isinstance(MyObject, Parallelogram):
+            MyObject.check_parallels()
+    print('-' * 50)
+    loop_answer = input('Would you like to create a new object again? (yes/no) ')
+    if loop_answer not in agree:
+        print('program shutdown')
+        break
+
+
