@@ -10,28 +10,36 @@ Below is a commented out program that analyzes quadrilaterals to find the maximu
 import math
 
 
-class Figure:
-    def __init__(self, num_of_points):
-        i = 0
-        dots = []
-        while i < num_of_points:
-            dot = []
-            x = int(input(f'enter X value for the {i + 1} point '))
-            y = int(input(f'enter Y value for the {i + 1} point '))
-            dot.append(x)
-            dot.append(y)
-            dots.append(dot)
-            i += 1
-        self.dots = dots
+def create_figure():
+    dots = []
+    for i in range(1, 5):
+        dot = []
+        x = int(input(f'enter X value for the {i} point '))
+        y = int(input(f'enter Y value for the {i} point '))
+        dot.append(x)
+        dot.append(y)
+        dots.append(dot)
+    question = input('would you like to check an object for the properties of a parallelogram? (yes/no) ').lower()
+    if question in {'yes', 'yep', 'y', 'ye'}:
+        return Parallelogram(dots)
+    elif question in {'no', 'nope', 'n'}:
+        return Quadrilateral(dots)
+    else:
+        print('Wrong answer. Please, try again')
+        return create_figure()
 
-        self.x1 = self.dots[0][0]
-        self.y1 = self.dots[0][1]
-        self.x2 = self.dots[1][0]
-        self.y2 = self.dots[1][1]
-        self.x3 = self.dots[2][0]
-        self.y3 = self.dots[2][1]
-        self.x4 = self.dots[3][0]
-        self.y4 = self.dots[3][1]
+
+class Quadrilateral:
+    def __init__(self, dots):
+
+        self.x1 = dots[0][0]
+        self.y1 = dots[0][1]
+        self.x2 = dots[1][0]
+        self.y2 = dots[1][1]
+        self.x3 = dots[2][0]
+        self.y3 = dots[2][1]
+        self.x4 = dots[3][0]
+        self.y4 = dots[3][1]
         print('the new object was created!\n')
 
     def __del__(self):
@@ -101,8 +109,9 @@ class Figure:
                  (perimetr / 2 - sides[3]))
         part2 = sides[0] * sides[1] * sides[2] * sides[3]
         part3 = ((math.cos((math.degrees(angle1) + math.degrees(angle2)) / 2)) ** 2)
-        if part1 - part2 * part3 > 0:
-            square = round(math.sqrt(part1 - part2 * part3), 2)
+        parts = part1 - part2 * part3
+        if parts > 0:
+            square = round(math.sqrt(parts), 2)
             print(f'the square of the figure is - {square:.2f}')
             return square
         else:
@@ -110,7 +119,7 @@ class Figure:
             return False
 
 
-class Parallelogram(Figure):
+class Parallelogram(Quadrilateral):
 
     def check_parallels(self):
         sides = self.get_sides(to_print=False)
@@ -121,25 +130,11 @@ class Parallelogram(Figure):
         else:
             print('this is not a parallelogram')
 
-    def get_parallels(self):
-        return f'has points: {self.x1}, {self.y1}, {self.x2}, {self.y2}, ' \
-               f'{self.x3}, {self.y3}, {self.x4}, {self.y4}'
-
 
 #creating an object to test methods of the "Figure" class
-obj = Figure(4)
-if (not obj.check_figure()) or (not obj.check_figure_sides) or (not obj.calculate_square()):
-    pass
-else:
-    obj.get_sides()
-    obj.calculate_perimeter()
-print('-' * 50)
-
-#creating an object to test methods of the "Parallelogram" class
-obj2 = Parallelogram(4)
-if (not obj2.check_figure()) or (not obj2.check_figure_sides) or (not obj2.calculate_square()):
-    pass
-else:
-    obj2.check_parallels()
-    obj2.get_sides()
-    obj2.calculate_perimeter()
+MyObject = create_figure()
+if MyObject.check_figure() and MyObject.check_figure_sides() and MyObject.calculate_square():
+    MyObject.get_sides()
+    MyObject.calculate_perimeter()
+    if isinstance(MyObject, Parallelogram):
+        MyObject.check_parallels()
