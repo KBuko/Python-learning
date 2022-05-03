@@ -22,13 +22,13 @@ def create_figure():
         dot.append(x)
         dot.append(y)
         dots.append(dot)
-    answer = input('would you like to check an object for the properties of a parallelogram? (yes/no) ')
+    answer = input('would you like to check an object for the properties of a parallelogram? (yes/no) ').lower()
     if answer in agree:
         return Parallelogram(dots)
     elif answer in disagree:
         return Quadrilateral(dots)
     else:
-        print('wrong answer. Try again')
+        print('Wrong answer. Please, try again')
         return create_figure()
 
 
@@ -112,8 +112,9 @@ class Quadrilateral:
                  (perimetr / 2 - sides[3]))
         part2 = sides[0] * sides[1] * sides[2] * sides[3]
         part3 = ((math.cos((math.degrees(angle1) + math.degrees(angle2)) / 2)) ** 2)
-        if part1 - part2 * part3 > 0:
-            square = round(math.sqrt(part1 - part2 * part3), 2)
+        parts = part1 - part2 * part3
+        if parts > 0:
+            square = round(math.sqrt(parts), 2)
             print(f'the square of the figure is - {square:.2f}')
             return square
         else:
@@ -141,9 +142,7 @@ while True:
         if isinstance(MyObject, Parallelogram):
             MyObject.check_parallels()
     print('-' * 50)
-    loop_answer = input('Would you like to create a new object again? (yes/no) ')
+    loop_answer = input('Would you like to create a new object again? (yes/no) ').lower()
     if loop_answer not in agree:
         print('program shutdown')
         break
-
-
